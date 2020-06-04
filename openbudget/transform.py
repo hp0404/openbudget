@@ -6,7 +6,7 @@ from pathlib import Path
 PATH = Path(__file__).resolve().parent.parent / "data"
 
 
-def get_cumulative(files, item_type="EXP"):
+def get_cumulative(files, item_type="EXPENSES"):
     """
     """
     
@@ -30,14 +30,15 @@ def get_cumulative(files, item_type="EXP"):
         with open(file, "r") as f:
             data = json.load(f)
         
-        month_string = file.split("/")[-1].split("_")[-1].split(".")[0]
+        file_as_str = str(file)
+        month_string = file_as_str.split("/")[-1].split("_")[-1].split(".")[0]
         month = _mappings.get(month_string)
         
         df = pd.json_normalize(data)
         df["MONTH"] = month
         
         # if expenses
-        if item_type == "EXP":
+        if item_type == "EXPENSES":
             df["IS_CUMULATIVE"] = (df["ECON"].eq("0000")).astype(int)
         
         d[month] = df
@@ -66,14 +67,14 @@ def subtraction(d):
             data[current] = d[1]
 
 
-def transform(d, item_type="EXP"):
+def transform(d, item_type="EXPENSES"):
     """
     """
     
     current_range = list(d.keys())[::-1]
     previous_range = [m-1 for m in current_range]
     
-    if item_type == "EXP":
+    if item_type == "EXPENSES":
         idxs = ["ADMIN", "FIN_SOURCE", "PROG", "FUNC", "ECON"]
     else:
         idxs = ["ADMIN", "FIN_SOURCE", "INCO"]
