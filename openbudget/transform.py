@@ -55,7 +55,7 @@ def get_cumulative(
 
 def transform(
     d: Dict[int, pd.DataFrame], 
-    item_type: bool = "EXPENSES"
+    item_type: str = "EXPENSES"
 ) -> pd.DataFrame:
     """Перетворює словник датафреймів на єдину таблицю та 
     перетворює кумулятивні значення на некумулятивні щомісячні
