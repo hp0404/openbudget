@@ -21,13 +21,11 @@ def pathlib_walk(p, outputs):
         noncumulative = transform(cumulative_dict, item_type=param_type)
         
         noncumulative.to_csv(outputs / f"{save_name}.csv", index=False)
-        
-        
 
 
 if __name__ == "__main__":
     
-    inputs  = RAW_FILES / "2018" / "INCOMES"
-    outputs = PROCESSED / "2018" / "INCOMES"
+    inputs  = RAW_FILES / "2020" / "INCOMES"
+    outputs = PROCESSED / "2020" / "INCOMES"
     outputs.mkdir(parents=True, exist_ok=True)
     pathlib_walk(inputs, outputs)

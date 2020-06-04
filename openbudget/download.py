@@ -52,7 +52,8 @@ def main():
 #     download_data(params, budget_item="EXPENSES", year=2019)
 #     download_data(params, budget_item="INCOMES", year=2019)
     
-    params = product(range(1,3+1), range(2, 25+1))
+#     params = product(range(1,4+1), range(2, 25+1))
+#     params = product([4], range(2, 25+1))
 #     download_data(params, budget_item="EXPENSES", year=2020)
     download_data(params, budget_item="INCOMES", year=2020)
     
