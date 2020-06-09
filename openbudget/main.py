@@ -20,12 +20,21 @@ def pathlib_walk(p, outputs):
         cumulative_dict = get_cumulative(files, item_type=param_type)
         noncumulative = transform(cumulative_dict, item_type=param_type)
         
-        noncumulative.to_csv(outputs / f"{save_name}.csv", index=False)
+        noncumulative["DATE"] = YEAR + " " + noncumulative["MONTH"].astype(str) + " 01"
+        noncumulative["DATE"] = pd.to_datetime(noncumulative["DATE"]).dt.strftime('%Y-%m-%d')
+        
+        noncumulative.drop("MONTH", 1).to_csv(outputs / f"{save_name}.csv", index=False)
 
 
 if __name__ == "__main__":
     
-    inputs  = RAW_FILES / "2020" / "INCOMES"
-    outputs = PROCESSED / "2020" / "INCOMES"
+    YEAR = "2018"
+    inputs  = RAW_FILES / YEAR / "EXPENSES"
+    outputs = PROCESSED / YEAR / "EXPENSES"
+    outputs.mkdir(parents=True, exist_ok=True)
+    pathlib_walk(inputs, outputs)
+    
+    inputs  = RAW_FILES / YEAR / "INCOMES"
+    outputs = PROCESSED / YEAR / "INCOMES"
     outputs.mkdir(parents=True, exist_ok=True)
     pathlib_walk(inputs, outputs)
