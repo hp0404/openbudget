@@ -1,10 +1,11 @@
 import json
+import numpy as np
 import pandas as pd
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
 def get_cumulative(
-    files: Dict[str, Any], 
+    files: List[Dict[str, Any]], 
     item_type: str ="EXPENSES"
 ) -> Dict[int, pd.DataFrame]:
     """ Перетворює щомісячні json на словник датафреймів. 
@@ -13,7 +14,7 @@ def get_cumulative(
     
     Parameters
     ----------
-        files : JSON
+        files : List[JSON]
             Відповідь АРІ openbudget.
         item_type : str
             Маркер типу файлу (видатки / доходи)
@@ -48,14 +49,15 @@ def get_cumulative(
         if item_type == "EXPENSES":
             df["IS_CUMULATIVE"] = df["ECON"].eq("0000").astype(int)
         
-        d[month] = df
+        d[month] = df.drop_duplicates()
     
     return d
 
 
 def transform(
     d: Dict[int, pd.DataFrame], 
-    item_type: str = "EXPENSES"
+    item_type: str,
+    year: str
 ) -> pd.DataFrame:
     """Перетворює словник датафреймів на єдину таблицю та 
     перетворює кумулятивні значення на некумулятивні щомісячні
@@ -80,16 +82,29 @@ def transform(
     data = dict()
     for current, previous in zip(current_range, previous_range):
         if previous != 0:
+
             tmp = (
                 d[current].set_index(idxs).subtract(d[previous].set_index(idxs), fill_value=0)
-            ).reset_index()
+            )
+            ac = (
+                d[current].set_index(idxs)["ADJUSTED"]
+            )
+            # cumulative
+            tmp["ADJUSTED"] = tmp.index.map(ac.to_dict())
             
-            tmp["MONTH"] = current
+            table = tmp.reset_index()
+            table["MONTH"] = current
+             
             if item_type == "EXPENSES":
-                tmp["IS_CUMULATIVE"] = tmp["ECON"].eq("0000").astype(int)
+                table["IS_CUMULATIVE"] = table["ECON"].eq("0000").astype(int)
             
-            data[current] = tmp
+            data[current] = table
         else:
             data[current] = d[1]
     
-    return pd.concat([*data.values()], ignore_index=False)[::-1]
+    df = pd.concat([*data.values()], ignore_index=False)[::-1]
+    df["DATE"] = pd.to_datetime(
+        year + " " + df["MONTH"].astype(str) + " 01"
+    ).dt.strftime("%Y-%m-%d")
+    
+    return df.drop("MONTH", 1)
