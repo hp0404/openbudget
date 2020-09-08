@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 from pathlib import Path
 
@@ -50,26 +51,6 @@ def concatenate(p, year, item_type):
         
         
 if __name__ == "__main__":
-    
-    year, item_type = "2018", "EXPENSES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
-    
-    year, item_type = "2018", "INCOMES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
-    
-    year, item_type = "2019", "EXPENSES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
-    
-    year, item_type = "2019", "INCOMES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
     
     year, item_type = "2020", "EXPENSES"
     p = RAW_FILES / year / item_type 

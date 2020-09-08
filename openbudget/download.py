@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import io
 import re
 import zipfile
@@ -39,25 +40,10 @@ def download_data(api_specific_params, budget_item="EXPENSES", year=2019):
             z = zipfile.ZipFile(io.BytesIO(r.content))
             z.extractall(save_path)
         else:
-            print(f"Помилка, url: {r.url}")
-        sleep(1)
+            print(f"Requests' error (status:{r.status}) for: {r.url}")
+        sleep(0.5)
         
-    
-def main():
-    
-#     params = product(range(1,12+1), range(2, 25+1))
-    #download_data(params, budget_item="EXPENSES", year=2018)
-    #download_data(params, budget_item="INCOMES", year=2018)
-    
-#     download_data(params, budget_item="EXPENSES", year=2019)
-#     download_data(params, budget_item="INCOMES", year=2019)
-    
-#     params = product(range(1,4+1), range(2, 25+1))
-#     params = product([4], range(2, 25+1))
-#     download_data(params, budget_item="EXPENSES", year=2020)
-    download_data(params, budget_item="INCOMES", year=2020)
-    
-
 
 if __name__ == "__main__":
-    main()
+    params = product(range(1,7+1), range(2, 25+1))
+    download_data(params, "INCOMES", 2020)

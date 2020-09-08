@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import pandas as pd
 from pathlib import Path
@@ -33,26 +34,10 @@ def main():
 
 if __name__ == "__main__":
     
-    YEAR = "2018"
-    ITEM = "EXPENSES"
-    main()
-    
-    YEAR = "2019"
-    ITEM = "EXPENSES"
-    main()
-
     YEAR = "2020"
     ITEM = "EXPENSES"
     main()
-    
-    YEAR = "2018"
-    ITEM = "INCOMES"
-    main()
-    
-    YEAR = "2019"
-    ITEM = "INCOMES"
-    main()
-
+   
     YEAR = "2020"
     ITEM = "INCOMES"
     main()
