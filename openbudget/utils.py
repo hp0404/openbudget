@@ -1,7 +1,34 @@
 import json
 import numpy as np
 import pandas as pd
+from pathlib import Path
 from typing import Any, Dict, List
+
+
+RAW_FILES = Path(__file__).resolve().parent.parent / "data" / "api_response"
+PROCESSED = Path(__file__).resolve().parent.parent / "data" / "tables"
+DTYPE_INC = {
+    "ADMIN": str,
+    "FIN_SOURCE": str,
+    "INCO": str,
+    "ADJUSTED": float, 
+    "EXECUTED": float,
+    "DATE": str
+}
+DTYPE_EXP  = {
+    "ADMIN": str,
+    "FIN_SOURCE": str,
+    "PROG": str,
+    "FUNC": str,
+    "ECON": str,
+    "ADJUSTED": float, 
+    "EXECUTED": float,
+    "EXECUTED_FIN_SOURCE_n1": float,
+    "EXECUTED_FIN_SOURCE_n2": float,
+    "EXECUTED_FIN_SOURCE_n6": float,
+    "IS_CUMULATIVE": str,
+    "DATE": str
+}
 
 
 def get_cumulative(

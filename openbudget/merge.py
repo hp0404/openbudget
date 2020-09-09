@@ -1,63 +1,38 @@
 # -*- coding: utf-8 -*-
+import pathlib
 import pandas as pd
-from pathlib import Path
+from typing import List
+from utils import PROCESSED, DTYPE_EXP, DTYPE_INC
 
 
-RAW_FILES = Path(__file__).resolve().parent.parent / "data" / "tables"
-
-
-def writer(files, name, item_type):
-    
-    if item_type == "EXPENSES":
-        _dtype = {
-            "ADMIN": str,
-            "FIN_SOURCE": str,
-            "PROG": str,
-            "FUNC": str,
-            "ECON": str,
-            "ADJUSTED": float, 
-            "EXECUTED": float,
-            "EXECUTED_FIN_SOURCE_n1": float,
-            "EXECUTED_FIN_SOURCE_n2": float,
-            "EXECUTED_FIN_SOURCE_n6": float,
-            "IS_CUMULATIVE": str,
-            "DATE": str
-        }
-    else:
-        _dtype = {
-            "ADMIN": str,
-            "FIN_SOURCE": str,
-            "INCO": str,
-            "ADJUSTED": float, 
-            "EXECUTED": float,
-            "DATE": str
-        }
-        
-    for i, file in enumerate(files):
-        df = pd.read_csv(file, dtype=_dtype)
-        if i == 0:
-            df.to_csv(RAW_FILES / name, index=False)
+def writer(
+        files: List[pathlib.WindowsPath], 
+        name: str, 
+        item_type: str
+    ) -> None:
+    """ Зводить усі файли в один по частинах """
+    _dtype = DTYPE_EXP if item_type == "EXPENSES" else DTYPE_INC        
+    for idx, f in enumerate(files):
+        df = pd.read_csv(f, dtype=_dtype)
+        if idx == 0:
+            df.to_csv(PROCESSED / name, index=False)
         else:
-            df.to_csv(RAW_FILES / name, mode="a", index=False, header=False)
+            df.to_csv(PROCESSED / name, mode="a", index=False, header=False)
             
             
-def concatenate(p, year, item_type):
-    
+def merge(p: pathlib.WindowsPath, year: str, item_type: str):
+    """ Обгортка для writer, котра визнає шлях"""
     files = [p / file_name for file_name in p.glob("*.csv")]
     name = p.parent / f"{item_type}_{year}.csv"
-    
     writer(files, name, item_type)
     
         
-        
+def main():
+    for pairs in [("2020", "EXPENSES"), ("2020", "INCOMES")]:
+        year, item_type = pairs
+        path = PROCESSED / year / item_type
+        merge(path, year, item_type)
+
+
 if __name__ == "__main__":
-    
-    year, item_type = "2020", "EXPENSES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
-    
-    year, item_type = "2020", "INCOMES"
-    p = RAW_FILES / year / item_type 
-    concatenate(p, year, item_type)
-    print(f"Done with {year + ',' + item_type}")
+    main()
