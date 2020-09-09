@@ -1,43 +1,35 @@
 # -*- coding: utf-8 -*-
-import json
-import pandas as pd
-from pathlib import Path
-
-from transform import get_cumulative, transform
-
-
-RAW_FILES = Path(__file__).resolve().parent.parent / "data" / "api_response"
-PROCESSED = Path(__file__).resolve().parent.parent / "data" / "tables"
-
-
-def pathlib_walk(p, outputs, year):
-    
-    for directory in p.iterdir():
-        
-        files = [directory / file_name for file_name in directory.glob("*.json")]
-        
-        param_type, save_name = directory.parts[-2:]
-        
-        cumulative_dict = get_cumulative(files, item_type=param_type)
-        noncumulative = transform(cumulative_dict, item_type=param_type, year=year)
-        noncumulative.to_csv(outputs / f"{save_name}.csv", index=False)
-        
-        
-def main():
-    
-    inputs  = RAW_FILES / YEAR / ITEM 
-    outputs = PROCESSED / YEAR / ITEM
-    outputs.mkdir(parents=True, exist_ok=True)
-    pathlib_walk(inputs, outputs, YEAR)
-    print(f"Done with {YEAR + ',' + ITEM}")
+import logging
+from download import main as download_raw_data
+from process import main as make_dataset
+from merge import main as merge_processed_tables
+from latest_month import main as save_latest_month
+from tests import main as tests
 
 
 if __name__ == "__main__":
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s]: %(message)s",
+        handlers=[
+            logging.FileHandler("logger.log"),
+            logging.StreamHandler()
+        ]
+    )
+
+    logging.info("Downloading raw data...")
+    download_raw_data()
+    logging.info("Transforming raw data into processed...")
+    make_dataset()
+    logging.info("Merging multiple tables into one...")
+    merge_processed_tables()
+    logging.info("Saving data for the last month separately...")
+    save_latest_month()
+
+    try:
+        tests()
+    except:
+        logging.exception("TESTS FAILED.")
     
-    YEAR = "2020"
-    ITEM = "EXPENSES"
-    main()
-   
-    YEAR = "2020"
-    ITEM = "INCOMES"
-    main()
+    logging.info("Done.")

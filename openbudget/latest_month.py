@@ -1,44 +1,26 @@
 import pandas as pd
-from pathlib import Path
+from utils import PROCESSED, DTYPE_INC, DTYPE_EXP
 
 
-DATA = Path(__file__).resolve().parent.parent / "data" / "tables" / "2020"
+PATH = PROCESSED / "2020"
 
-di = {
-    "ADMIN": str,
-    "FIN_SOURCE": str,
-    "INCO": str,
-    "ADJUSTED": float, 
-    "EXECUTED": float,
-    "DATE": str
-}
 
-de = {
-    "ADMIN": str,
-    "FIN_SOURCE": str,
-    "PROG": str,
-    "FUNC": str,
-    "ECON": str,
-    "ADJUSTED": float, 
-    "EXECUTED": float,
-    "EXECUTED_FIN_SOURCE_n1": float,
-    "EXECUTED_FIN_SOURCE_n2": float,
-    "EXECUTED_FIN_SOURCE_n6": float,
-    "IS_CUMULATIVE": str,
-    "DATE": str
-}
-
-def date_slice(table):
+def slice_maxdate(table: pd.DataFrame) -> pd.DataFrame:
     max_date = table["DATE"].max()
     return table.loc[table["DATE"].eq(max_date)], max_date 
 
 
+def main() -> None:
+    """ Відфільтровує та зберігає окремо дані за останній місяць. """
+    incomes = pd.read_csv(PATH / "INCOMES_2020.csv", dtype=DTYPE_INC)
+    expenses = pd.read_csv(PATH / "EXPENSES_2020.csv", dtype=DTYPE_EXP)
+
+    latest_incomes, month = slice_maxdate(incomes)
+    latest_incomes.to_csv(PATH / f"INCOMES_{month}.csv", index=False)
+
+    latest_expenses, month = slice_maxdate(expenses)
+    latest_expenses.to_csv(PATH / f"EXPENSES_{month}.csv", index=False)
+
+
 if __name__ == "__main__":
-    incomes = pd.read_csv(DATA / "INCOMES_2020.csv", dtype=di)
-    expenses = pd.read_csv(DATA / "EXPENSES_2020.csv", dtype=de)
-
-    latest_incomes, month = date_slice(incomes)
-    latest_incomes.to_csv(DATA / f"INCOMES_{month}.csv", index=False)
-
-    latest_expenses, month = date_slice(expenses)
-    latest_expenses.to_csv(DATA / f"EXPENSES_{month}.csv", index=False)
+    main()

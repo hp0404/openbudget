@@ -1,14 +1,12 @@
 import pandas as pd 
-from pathlib import Path
-from transform import get_cumulative
-from latest_month import date_slice
+from utils import get_cumulative, RAW_FILES, PROCESSED
+from latest_month import slice_maxdate
 
 
 DTYPES = {"ADMIN": str, "INCO":str, "ECON":str}
-PATH = Path(__file__).resolve().parent.parent / "data"
-TRANSFORMED = PATH / "tables" / "2020"
-RAW_INC_FILES = PATH / "api_response" / "2020" / "INCOMES" / "10" 
-RAW_EXP_FILES = PATH / "api_response" / "2020" / "EXPENSES" / "10" 
+TRANSFORMED = PROCESSED / "2020"
+RAW_INC_FILES = RAW_FILES / "2020" / "INCOMES" / "10" 
+RAW_EXP_FILES = RAW_FILES / "2020" / "EXPENSES" / "10" 
 
 
 def incomes():
@@ -27,7 +25,6 @@ def incomes():
     # merged correctly
     assert test2["EXECUTED"].sum().round(2) == test1["EXECUTED"].sum().round(2)
 
-
     cumulative_dict = get_cumulative(RAW_INC_FILES.rglob("*.json"), item_type="INCOMES")
     last_month = [*cumulative_dict.keys()][-1]
     cumulative_df = cumulative_dict[last_month]
@@ -41,7 +38,7 @@ def incomes():
     assert test3["EXECUTED"].sum().round(2) == test1["EXECUTED"].sum().round(2)
     
     # ADJUSTED
-    test1_latest_month, _ = date_slice(test1)
+    test1_latest_month, _ = slice_maxdate(test1)
     assert test3["ADJUSTED"].sum().round(2) == test1_latest_month["ADJUSTED"].sum().round(2)
 
 
@@ -74,10 +71,14 @@ def expenses():
     assert test3["EXECUTED"].sum().round(2) == test1["EXECUTED"].sum().round(2)
     
     # ADJUSTED
-    test1_latest_month, _ = date_slice(test1)
+    test1_latest_month, _ = slice_maxdate(test1)
     assert test3["ADJUSTED"].sum().round(2) == test1_latest_month["ADJUSTED"].sum().round(2)
 
 
-if __name__ == "__main__":
+def main():
     incomes()
     expenses()
+
+
+if __name__ == "__main__":
+    main()
