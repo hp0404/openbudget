@@ -27,8 +27,8 @@ def merge(p: pathlib.WindowsPath, year: str, item_type: str):
     writer(files, name, item_type)
     
         
-def main():
-    for pairs in [("2020", "EXPENSES"), ("2020", "INCOMES")]:
+def main(year: str = "2020"):
+    for pairs in [(str(year), "EXPENSES"), (str(year), "INCOMES")]:
         year, item_type = pairs
         path = PROCESSED / year / item_type
         merge(path, year, item_type)
