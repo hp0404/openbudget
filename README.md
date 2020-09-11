@@ -1,19 +1,14 @@
 # OPENBUDGET
-
 ## About
-
 Колекція скриптів для роботи з [openbudget api](https://openbudget.gov.ua/). 
 
 ## Usage
-
-1. Налаштувати параметри (місяць, код областей) в `openbudget/download.py` (за замовченням завантажить дані по липень 2020 року).
-2. Виконати `(env)$ python openbudget/main.py` 
-
-## TO-DO
-- [x] Завантажити дані з розподілом на рік, область
-- [x] Перетворити кумулятивні дані в щомісячні
-- [x] Звести результати за роком та типом бюджету
-- [x] Додати тести
-- [x] Налаштувати автоматичне оновлення файлів за кожен наступний місяць (`latest_month`)
-- [x] Виправити повторення dtypes в `merge` та `latest_month`
-- [x] Створити main, котрий послідовно і з логуванням виконає усі скрипти
+```bash
+$ python -m venv env
+$ source env/Scripts/activate
+(env)$ pip install -r requirements.txt
+(env)$ python openbudget/main.py
+First month: [1]: 
+Last month: [12]: 
+Year: [2020]:
+```
