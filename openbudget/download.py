@@ -4,6 +4,7 @@ import re
 import zipfile
 import json
 
+import click
 import requests
 import pandas as pd
 
@@ -20,7 +21,7 @@ URL = "http://api.openbudget.gov.ua/api/public/getFile"
 def download_data(
         api_specific_params: List[Tuple[int, int]], 
         budget_item: str = "EXPENSES", 
-        year: int = 2019
+        year: int = 2020
     ) -> None:
     """ Завантажує та розпаковує `.zip` файли api/public/getFile.
     
@@ -49,10 +50,10 @@ def download_data(
         sleep(0.2)
         
 
-def main():
-    params = [*product(range(1,7+1), range(2, 25+1))]
+def main(firstmonth: int = 1, lastmonth: int = 12, year: int = 2020):
+    params = [*product(range(firstmonth, lastmonth+1), range(2, 25+1))]
     for budget_item in ("EXPENSES", "INCOMES"):
-        download_data(params, budget_item, 2020)
+        download_data(params, budget_item, year)
         
 
 if __name__ == "__main__":

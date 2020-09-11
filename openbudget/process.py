@@ -30,8 +30,8 @@ def process_raw_data(year: str, item: str) -> None:
     pathlib_walk(inputs, outputs, year)
 
 
-def main():
-    for pairs in [("2020", "EXPENSES"), ("2020", "INCOMES")]:
+def main(year):
+    for pairs in [(str(year), "EXPENSES"), (str(year), "INCOMES")]:
         process_raw_data(*pairs)
     
 
