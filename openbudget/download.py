@@ -12,7 +12,7 @@ from time import sleep
 from itertools import product
 from typing import List, Tuple
 
-from utils import RAW_FILES
+from utils import RAW_FILES, NUM_MAPPINGS
 
 
 URL = "http://api.openbudget.gov.ua/api/public/getFile"
@@ -36,6 +36,11 @@ def download_data(
     for month, ter_id in api_specific_params:
         save_path = (RAW_FILES / str(year) / str(budget_item) / str(ter_id))
         save_path.mkdir(parents=True, exist_ok=True)
+
+        _map = {v:k for k,v in NUM_MAPPINGS.items()}
+        file_name = f"{_map.get(ter_id)}_{budget_item[:3]}_{year}_{_map.get(month)}.json"
+        if (save_path / file_name).is_file():
+            continue        
 
         params = {
             "budgetItem": budget_item, "year": year, 

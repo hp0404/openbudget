@@ -30,6 +30,35 @@ DTYPE_EXP  = {
     "DATE": str
 }
 
+NUM_MAPPINGS = {
+    "01": 1,
+    "02": 2,
+    "03": 3,
+    "04": 4,
+    "05": 5,
+    "06": 6,
+    "07": 7,
+    "08": 8,
+    "09": 9,
+    "10": 10,
+    "11": 11,
+    "12": 12,
+    "13": 13,
+    "14": 14,
+    "15": 15,
+    "16": 16,
+    "17": 17,
+    "18": 18,
+    "19": 19,
+    "20": 20,
+    "21": 21,
+    "22": 22,
+    "23": 23,
+    "24": 24,
+    "25": 25
+
+}
+
 
 def get_cumulative(
     files: List[Dict[str, Any]], 
@@ -46,29 +75,14 @@ def get_cumulative(
         item_type : str
             Маркер типу файлу (видатки / доходи)
     """
-    
-    _mappings = {
-        "01": 1,
-        "02": 2,
-        "03": 3,
-        "04": 4,
-        "05": 5,
-        "06": 6,
-        "07": 7,
-        "08": 8,
-        "09": 9,
-        "10": 10,
-        "11": 11,
-        "12": 12
-    }
-    
+        
     d = dict()
     for file in files:        
         with open(file, "r") as f:
             data = json.load(f)
         
         month_string = str(file).split("/")[-1].split("_")[-1].split(".")[0]
-        month = _mappings.get(month_string)
+        month = NUM_MAPPINGS.get(month_string)
         
         df = pd.json_normalize(data)
         df["MONTH"] = month
@@ -98,7 +112,7 @@ def transform(
             Маркер типу файлу (видатки / доходи)
     """
     
-    current_range = list(d.keys())[::-1]
+    current_range = [*d.keys()][::-1]
     previous_range = [m-1 for m in current_range]
     
     if item_type == "EXPENSES":
