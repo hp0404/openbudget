@@ -1,6 +1,8 @@
 # OPENBUDGET
 ## About
-Колекція скриптів для роботи з [openbudget api](https://openbudget.gov.ua/). 
+Колекція скриптів для роботи з [openbudget api](https://confluence.spending.gov.ua/pages/viewpage.action?pageId=39553516). 
+
+Перетворює накопичувальні дані у щомісячні і формує `.csv` таблиці для подальшого оновлення бази даних
 
 ## Usage
 ```bash
