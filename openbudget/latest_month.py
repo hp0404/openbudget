@@ -4,7 +4,7 @@ from utils import PROCESSED, DTYPE_INC, DTYPE_EXP
 
 def slice_maxdate(table: pd.DataFrame) -> pd.DataFrame:
     max_date = table["DATE"].max()
-    return table.loc[table["DATE"].eq(max_date)], max_date 
+    return table.loc[table["DATE"].eq(max_date)], max_date
 
 
 def main(year: str = "2020") -> None:

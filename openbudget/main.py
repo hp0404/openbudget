@@ -17,10 +17,7 @@ def cli(firstmonth, lastmonth, year):
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s]: %(message)s",
-        handlers=[
-            logging.FileHandler("logger.log"),
-            logging.StreamHandler()
-        ]
+        handlers=[logging.FileHandler("logger.log"), logging.StreamHandler()],
     )
 
     logging.info("Downloading raw data...")
@@ -36,7 +33,7 @@ def cli(firstmonth, lastmonth, year):
         logging.info("Passed tests.")
     except:
         logging.exception("TESTS FAILED.")
-    
+
     logging.info("Done.")
 
 
